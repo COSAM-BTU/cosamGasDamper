@@ -8,6 +8,7 @@ abstract: >-
   a force and energy summary, and headless ParaView renderings; a sweep runner executes parameter studies under a
   core budget.
 version: 1.0.0
+doi: 10.5281/zenodo.24042536
 date-released: 2026-11-07
 license: GPL-3.0-or-later
 repository-code: "https://github.com/COSAM-BTU/cosamGasDamper"

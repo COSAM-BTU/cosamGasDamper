@@ -1,5 +1,7 @@
 # cosamGasDamper
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24042536.svg)](https://doi.org/10.5281/zenodo.24042536)
+
 Automated, end-to-end CFD of large-stroke, gas-filled piston–cylinder dampers
 and gas springs with one to ten orifices, with OpenFOAM and SALOME.
 
@@ -194,6 +196,10 @@ L. Aydınbakar, M. Gömlekli, An open-source multi-mesh OpenFOAM
 framework for the automated simulation of large-stroke gas-filled
 piston–cylinder dampers with multiple orifices, submitted to Advances in
 Engineering Software (2026).
+
+Software, all versions: https://doi.org/10.5281/zenodo.24042536.
+Data of the article (case records, derived tables, figure data):
+https://doi.org/10.5281/zenodo.24042564.
 
 ## Licence
 
