@@ -1,0 +1,13 @@
+# Reference mesh (curvature size 8, axial cells of 0.1 mm inside the piston and at its faces) for N = 1 to 10,
+# mesh stage only (damper run <case> --only mesh): cross-sections, axial sections and boundary meshes of the paper
+# figures.
+case:
+  name: sections
+  name_template: "sec_N{geometry_orifice_count}"
+mesh:
+  section:
+    curvature_elements: 8
+  piston_cell_size_mm: 0.1
+  face_cell_size_mm: 0.1
+sweep:
+  geometry.orifice.count: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

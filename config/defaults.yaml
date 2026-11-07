@@ -1,0 +1,95 @@
+# Default configuration of a gas-damper case.  Every key can be overridden in
+# a user config; units are part of the key names.
+schema_version: 1
+
+case:
+  name: damper
+  description: ""
+
+geometry:                     # millimetres
+  cylinder_radius_mm: 10.0
+  rod_radius_mm: 4.0
+  cylinder_length_mm: 120.0   # axial length of the gas space
+  piston_length_mm: 8.0       # piston thickness = orifice length
+  orifice:
+    count: 2                  # N >= 1, equally spaced
+    radius_mm: 1.0
+    pitch_radius_mm: 7.0      # distance of the orifice centres from the axis
+    start_angle_deg: 90.0     # angular position of the first orifice (90 deg = +z)
+
+motion:
+  stroke_mm: 90.0
+  mean_speed_mps: 0.1         # stroke / stroke time; give this OR stroke_time_s
+  stroke_time_s: null
+  profile: constant           # constant | sinusoidal
+  cycles: 1                   # one cycle = compression + rebound
+  initial_piston_front_mm: null   # null -> centred stroke: L/2 + S/2 - lp/2
+  meshes_per_stroke: 4        # K sub-meshes; each deforms by at most S/K
+  velocity_table_points_per_stroke: 400   # sinusoidal profile only
+
+gas:
+  species: N2
+  molar_mass_kg_per_kmol: 28.0134
+  cp_J_per_kgK: 1040.0
+  sutherland_As: 1.401e-6     # Pa s K^-0.5 (N2)
+  sutherland_Ts_K: 107.0      # K (N2)
+  initial_pressure_Pa: 1.0e5
+  initial_temperature_K: 300.0
+  ambient_pressure_Pa: 1.01325e5   # reference for gauge forces
+  turbulence: kOmegaSST       # laminar | kOmegaSST
+  turbulence_intensity: 0.05
+  turbulence_length_scale_mm: 0.2
+
+mesh:
+  chamber_cell_size_mm: 1.0   # axial cell size in the chambers
+  piston_cell_size_mm: 1.0    # axial cell size inside the orifices
+  face_cell_size_mm: null     # axial cell size in the chambers next to the piston faces, growing geometrically
+                              # (ratio face_cell_growth) to chamber_cell_size_mm; null = uniform chamber cells
+  face_cell_growth: 1.15
+  section:
+    algorithm_2d: 6           # GMSH quasi-structured quad
+    subdiv_algo: 0
+    smoothing_steps: 25
+    size_factor: 0.8          # scales the in-plane cell size
+    min_size_mm: 0.15
+    max_size_mm: 1.0e+22
+    curvature_elements: null  # elements per 2*pi on curved edges (local refinement of the orifices); null = off
+    preserve_orifice_area: false  # scale each discretised orifice disc radially so that its polygonal area equals pi*r_o^2
+  section_med: null           # reuse a stored cross-section (MED) if given
+  merge_tolerance_mm: 1.0e-6
+  motion_diffusivity: [1, 200, 200]
+
+numerics:
+  max_courant: 1.0
+  initial_dt_s: 1.0e-6
+  max_dt_s: null              # null -> stroke_time / 400
+  writes_per_stroke: 8        # field output (render, restart); function objects every step
+  time_precision: 10
+  n_outer_correctors: 2
+  n_correctors: 2
+  n_non_orth_correctors: 1
+  p_min_factor: 0.2           # pMin = factor * p0
+  p_max_factor: 5.0           # pMax = factor * p0
+  map_consistent: true
+  map_method: interpolate     # field transfer at a mesh switch: interpolate (mapFields) or cellVolumeWeight
+                              # (mapFieldsPar, conserves the integrals of the mapped fields)
+
+run:
+  n_procs: 8
+  openfoam_bashrc: /usr/lib/openfoam/openfoam2406/etc/bashrc
+  salome: /opt/salome912/salome
+  pvbatch: pvbatch
+  mpirun: mpirun
+  keep_processor_dirs: false
+
+post:
+  checks:
+    mass_rel_tol: 1.0e-3      # warn above this relative mass jump at a mesh switch
+    piston_position_tol_mm: 1.0e-3
+
+render:
+  enabled: true
+  fields: [p, U, T]
+  times: [compression_mid, compression_end, rebound_mid]
+  resolution: [1600, 500]
+  colormap: Viridis (matplotlib)   # ParaView preset; a sequential map for the non-negative fields p, |U|, T

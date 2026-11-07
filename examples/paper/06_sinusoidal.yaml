@@ -1,0 +1,11 @@
+# Generality: sinusoidal piston motion with the same mean speed (1 m/s), N = 4.
+case:
+  name: sin
+  name_template: "sin_N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+motion:
+  profile: sinusoidal
+run:
+  n_procs: 8
+sweep:
+  geometry.orifice.count: [4]
+  motion.mean_speed_mps: [1.0]

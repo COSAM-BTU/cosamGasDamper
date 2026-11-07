@@ -1,0 +1,94 @@
+# Verification and sensitivity studies on the reference mesh of 14_matrix_ref.yaml (orifice-refined cross-section,
+# curvature size 8, with axial cells of 0.1 mm inside the piston and at its faces). Every case reuses a stored
+# cross-section, so that only the studied parameter differs from its reference case; mesh.section_med is relative to
+# the directory the sweep is started from.
+# - time step (maxCo 0.5), sub-meshes per stroke (K = 3, 6), laminar flow, 20 bar, sinusoidal motion and a second,
+#   independently generated cross-section, each against the matrix case of the same N and speed;
+# - axial convergence: 0.2 and 0.05 mm against 0.1 mm, for N = 2 and 10;
+# - in-plane convergence with the axial refinement: C = 6, 10, 12 and 16 against 8 for N = 2, and C = 6, 10 and 12
+#   for N = 10, on the cross-sections of the studies without axial refinement (09_orifice_refinement,
+#   12_studies_C8, 13_further_C8; C = 16 generates its own);
+# - the level C = 12 at 0.1 and 4 m/s and at 20 bar.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  section:
+    curvature_elements: 8
+  section_med: matrixC8/N2_v1.0/mesh/section.med
+  piston_cell_size_mm: 0.1
+  face_cell_size_mm: 0.1
+run:
+  n_procs: 16
+variants:
+  - name: co05_N2_v1.0                         # time step: maxCo 0.5 against 1
+    set: {numerics.max_courant: 0.5, run.n_procs: 24}
+  - name: co05_N2_v4.0
+    set: {numerics.max_courant: 0.5, motion.mean_speed_mps: 4.0,
+          mesh.section_med: matrixC8/N2_v4.0/mesh/section.med}
+  - name: seg_K3                               # sub-meshes per stroke: 3 and 6 against 4
+    set: {motion.meshes_per_stroke: 3}
+  - name: seg_K6
+    set: {motion.meshes_per_stroke: 6}
+  - name: lam_N2_v0.1                          # turbulence model: laminar against kOmegaSST
+    set: {gas.turbulence: laminar, motion.mean_speed_mps: 0.1,
+          mesh.section_med: matrixC8/N2_v0.1/mesh/section.med}
+  - name: lam_N2_v1.0
+    set: {gas.turbulence: laminar}
+  - name: p20_N2_v1.0                          # pre-charge pressure 20 bar against 1 bar
+    set: {gas.initial_pressure_Pa: 2.0e+6}
+  - name: p20_N6_v1.0
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 6,
+          mesh.section_med: matrixC8/N6_v1.0/mesh/section.med}
+  - name: p20_N10_v1.0
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 10, run.n_procs: 24,
+          mesh.section_med: matrixC8/N10_v1.0/mesh/section.med}
+  - name: sin_N4_v1.0                          # sinusoidal piston motion with the same mean speed
+    set: {motion.profile: sinusoidal, geometry.orifice.count: 4,
+          mesh.section_med: matrixC8/N4_v1.0/mesh/section.med}
+  - name: rep_N2_v1.0                          # independently generated cross-section (no stored section)
+    set: {mesh.section_med: null}
+  - name: ax02_N2_v1.0                         # axial convergence: 0.2 and 0.05 mm against 0.1 mm
+    set: {mesh.piston_cell_size_mm: 0.2, mesh.face_cell_size_mm: 0.2}
+  - name: ax005_N2_v1.0
+    set: {mesh.piston_cell_size_mm: 0.05, mesh.face_cell_size_mm: 0.05, run.n_procs: 24}
+  - name: ax02_N10_v1.0
+    set: {geometry.orifice.count: 10, mesh.piston_cell_size_mm: 0.2, mesh.face_cell_size_mm: 0.2,
+          run.n_procs: 24, mesh.section_med: matrixC8/N10_v1.0/mesh/section.med}
+  - name: ax005_N10_v1.0
+    set: {geometry.orifice.count: 10, mesh.piston_cell_size_mm: 0.05, mesh.face_cell_size_mm: 0.05,
+          run.n_procs: 32, mesh.section_med: matrixC8/N10_v1.0/mesh/section.med}
+  - name: orif_C6                              # in-plane convergence, N = 2 (C = 8: matrix N2_v1.0)
+    set: {mesh.section.curvature_elements: 6, mesh.section_med: studies/orif_C6/mesh/section.med}
+  - name: orif_C10
+    set: {mesh.section.curvature_elements: 10, mesh.section_med: furtherC8/orif_C10/mesh/section.med}
+  - name: orif_C12
+    set: {mesh.section.curvature_elements: 12, run.n_procs: 24, mesh.section_med: studies/orif_C12/mesh/section.med}
+  - name: orifN10_C6                           # in-plane convergence, N = 10 (C = 8: matrix N10_v1.0)
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 6, run.n_procs: 24,
+          mesh.section_med: furtherC8/orifN10_C6/mesh/section.med}
+  - name: orifN10_C10
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 10, run.n_procs: 32,
+          mesh.section_med: furtherC8/orifN10_C10/mesh/section.med}
+  - name: orifN10_C12
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 12, run.n_procs: 32,
+          mesh.section_med: studiesC8/orifN10_C12/mesh/section.med}
+  - name: orif_C16                             # finest in-plane level, N = 2, own cross-section
+    set: {mesh.section.curvature_elements: 16, run.n_procs: 32}
+  - name: orif_C12_v0.1                        # C = 12 at 0.1 and 4 m/s (C = 8: matrix N2_v0.1, N2_v4.0, N10_v4.0)
+    set: {mesh.section.curvature_elements: 12, motion.mean_speed_mps: 0.1, run.n_procs: 24,
+          mesh.section_med: studies/orif_C12/mesh/section.med}
+  - name: orif_C12_v4.0
+    set: {mesh.section.curvature_elements: 12, motion.mean_speed_mps: 4.0, run.n_procs: 24,
+          mesh.section_med: studies/orif_C12/mesh/section.med}
+  - name: orifN10_C12_v4.0
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 12, motion.mean_speed_mps: 4.0,
+          run.n_procs: 32, mesh.section_med: studiesC8/orifN10_C12/mesh/section.med}
+  - name: p20_N2_C12                           # 20 bar on the level C = 12
+    set: {gas.initial_pressure_Pa: 2.0e+6, mesh.section.curvature_elements: 12, run.n_procs: 24,
+          mesh.section_med: furtherC8/p20_N2_C12/mesh/section.med}
+  - name: p20_N10_C12
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 10, mesh.section.curvature_elements: 12,
+          run.n_procs: 32, mesh.section_med: furtherC8/p20_N10_C12/mesh/section.med}

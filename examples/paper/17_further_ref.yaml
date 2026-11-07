@@ -1,0 +1,77 @@
+# Additional cases on the reference mesh of 14_matrix_ref.yaml (curvature size 8, axial cells of 0.1 mm inside the
+# piston and at its faces). mesh.section_med is relative to the directory the sweep is started from; a case that
+# reuses the cross-section of another case of this file must be meshed after it.
+# - in-plane uncertainty: C = 12 and 16 at further orifice Reynolds numbers (C = 8: the matrix case of the same N
+#   and speed; N = 2 at 0.4 m/s and N = 10 at 2 m/s have the same Re_o), at 20 bar and for laminar flow;
+# - orifice area: the reference and the medium cross-section with the orifice discs scaled to the area pi r_o^2
+#   (mesh.section.preserve_orifice_area), each against the same cross-section without scaling;
+# - conservative field transfer at the mesh switches (numerics.map_method: cellVolumeWeight);
+# - orifice count at equal total orifice area: N = 2 and 10 with the total area of N = 6 (r_o = sqrt(3) and
+#   sqrt(0.6) mm), against the matrix cases N6_v1.0 and N6_v4.0.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  section:
+    curvature_elements: 8
+  section_med: matrixC8/N2_v1.0/mesh/section.med
+  piston_cell_size_mm: 0.1
+  face_cell_size_mm: 0.1
+run:
+  n_procs: 16
+variants:
+  - name: orifN10_C16_v2.0                     # in-plane level C = 16, N = 10 (own cross-section)
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 16, motion.mean_speed_mps: 2.0,
+          run.n_procs: 48, mesh.section_med: null}
+  - name: orifN10_C16_v4.0
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 16, motion.mean_speed_mps: 4.0,
+          run.n_procs: 48, mesh.section_med: furtherC8ax/orifN10_C16_v2.0/mesh/section.med}
+  - name: p20_N10_C16
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 16, gas.initial_pressure_Pa: 2.0e+6,
+          run.n_procs: 48, mesh.section_med: furtherC8ax/orifN10_C16_v2.0/mesh/section.med}
+  - name: orifN10_C12_v2.0                     # in-plane level C = 12, N = 10
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 12, motion.mean_speed_mps: 2.0,
+          run.n_procs: 32, mesh.section_med: studiesC8/orifN10_C12/mesh/section.med}
+  - name: orif_C16_v0.1                        # in-plane level C = 16, N = 2 (cross-section of orif_C16)
+    set: {mesh.section.curvature_elements: 16, motion.mean_speed_mps: 0.1, run.n_procs: 32,
+          mesh.section_med: studiesC8ax/orif_C16/mesh/section.med}
+  - name: orif_C16_v0.4
+    set: {mesh.section.curvature_elements: 16, motion.mean_speed_mps: 0.4, run.n_procs: 32,
+          mesh.section_med: studiesC8ax/orif_C16/mesh/section.med}
+  - name: orif_C16_v4.0
+    set: {mesh.section.curvature_elements: 16, motion.mean_speed_mps: 4.0, run.n_procs: 32,
+          mesh.section_med: studiesC8ax/orif_C16/mesh/section.med}
+  - name: p20_N2_C16
+    set: {mesh.section.curvature_elements: 16, gas.initial_pressure_Pa: 2.0e+6, run.n_procs: 32,
+          mesh.section_med: studiesC8ax/orif_C16/mesh/section.med}
+  - name: lam_N2_C16                           # laminar on the level C = 16 (SST: orif_C16)
+    set: {mesh.section.curvature_elements: 16, gas.turbulence: laminar, run.n_procs: 32,
+          mesh.section_med: studiesC8ax/orif_C16/mesh/section.med}
+  - name: orif_C12_v0.4                        # in-plane level C = 12, N = 2
+    set: {mesh.section.curvature_elements: 12, motion.mean_speed_mps: 0.4, run.n_procs: 24,
+          mesh.section_med: studies/orif_C12/mesh/section.med}
+  - name: eqA_N2_v1.0                          # N = 2 with the total orifice area of N = 6 (own cross-section)
+    set: {geometry.orifice.radius_mm: 1.7320508, mesh.section_med: null}
+  - name: eqA_N2_v4.0
+    set: {geometry.orifice.radius_mm: 1.7320508, motion.mean_speed_mps: 4.0,
+          mesh.section_med: furtherC8ax/eqA_N2_v1.0/mesh/section.med}
+  - name: eqA_N10_v1.0                         # N = 10 with the total orifice area of N = 6 (own cross-section)
+    set: {geometry.orifice.count: 10, geometry.orifice.radius_mm: 0.7745967, run.n_procs: 24,
+          mesh.section_med: null}
+  - name: eqA_N10_v4.0
+    set: {geometry.orifice.count: 10, geometry.orifice.radius_mm: 0.7745967, motion.mean_speed_mps: 4.0,
+          run.n_procs: 24, mesh.section_med: furtherC8ax/eqA_N10_v1.0/mesh/section.med}
+  - name: area_N2_v1.0                         # reference cross-section of matrix N2_v1.0, discs scaled to pi r_o^2
+    set: {mesh.section.preserve_orifice_area: true}
+  - name: cvw_N2_v4.0                          # conservative mapping (largest switch mass change of the matrix)
+    set: {numerics.map_method: cellVolumeWeight, motion.mean_speed_mps: 4.0,
+          mesh.section_med: matrixC8/N2_v4.0/mesh/section.med}
+  - name: med_N2_v1.0                          # medium mesh (global cell size, 1 mm axial cells; own cross-section)
+    set: {mesh.section.curvature_elements: null, mesh.piston_cell_size_mm: 1.0, mesh.face_cell_size_mm: null,
+          mesh.section_med: null, run.n_procs: 8}
+  - name: medarea_N2_v1.0                      # the same cross-section with the discs scaled to pi r_o^2
+    set: {mesh.section.curvature_elements: null, mesh.piston_cell_size_mm: 1.0, mesh.face_cell_size_mm: null,
+          mesh.section.preserve_orifice_area: true, run.n_procs: 8,
+          mesh.section_med: furtherC8ax/med_N2_v1.0/mesh/section.med}

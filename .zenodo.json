@@ -1,0 +1,14 @@
+{
+  "title": "cosamGasDamper",
+  "upload_type": "software",
+  "description": "<p>Configuration-driven OpenFOAM framework for the automated simulation of large-stroke gas springs and gas-filled piston&ndash;cylinder dampers with one to ten orifices. One YAML file and one command produce the parametric geometry and hexahedral sub-meshes (SALOME with the quasi-structured quadrilateral algorithm of Gmsh), a segmented multi-mesh compressible moving-mesh simulation of the whole stroke with rhoPimpleFoam (each sub-mesh deforms by at most S/K, fields are mapped between segments, the gas mass and volume are checked at every time step), time series in CSV format, a spring/damping force and dissipated-energy summary, and headless ParaView renderings. A sweep runner executes parameter studies under a core budget.</p><p>The release contains the framework, a tutorial case, unit tests, the configuration files of all studies of the accompanying article, the orifice benchmark script and the analysis and plotting scripts that produce the figures and tables of the article from the case records.</p><p>Accompanying article: L. Aydınbakar, M. Gömlekli, An open-source multi-mesh OpenFOAM framework for the automated simulation of large-stroke gas-filled piston&ndash;cylinder dampers with multiple orifices (submitted to Advances in Engineering Software).</p><p>This offering is not approved or endorsed by OpenCFD Limited, producer and distributor of the OpenFOAM software via www.openfoam.com, and owner of the OPENFOAM&reg; and OpenCFD&reg; trade marks.</p>",
+  "creators": [
+    {"name": "Aydınbakar, Levent", "affiliation": "Bursa Technical University", "orcid": "0000-0002-8820-9874"},
+    {"name": "Gömlekli, Murat", "affiliation": "Bursa Technical University", "orcid": "0009-0003-9423-7315"}
+  ],
+  "license": "gpl-3.0-or-later",
+  "keywords": ["OpenFOAM", "gas spring", "gas damper", "moving mesh", "compressible orifice flow", "workflow automation", "SALOME", "parametric meshing"],
+  "related_identifiers": [
+    {"identifier": "https://github.com/COSAM-BTU/cosamGasDamper", "relation": "isSupplementTo", "scheme": "url"}
+  ]
+}

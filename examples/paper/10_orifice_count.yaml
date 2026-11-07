@@ -1,0 +1,19 @@
+# Does the orifice resolution bias depend on the orifice count? N = 6 and 10, v = 1 m/s, medium mesh elsewhere,
+# orifices refined to 132 quadrilaterals per cross-section (curvature size 8, as orif_C8 for N = 2). On the medium
+# mesh the orifice cross-section holds 16 quadrilaterals for N <= 6 but more for N = 8 and 10.
+motion:
+  mean_speed_mps: 1.0
+mesh:
+  chamber_cell_size_mm: 1.0
+  piston_cell_size_mm: 1.0
+  section:
+    size_factor: 0.8
+    min_size_mm: 0.15
+    curvature_elements: 8
+run:
+  n_procs: 8
+variants:
+  - name: orifN6_C8
+    set: {geometry.orifice.count: 6}
+  - name: orifN10_C8
+    set: {geometry.orifice.count: 10}

@@ -1,0 +1,19 @@
+# Mesh-independence study: N = 2, v = 1 m/s, three levels, refinement ratio 1.5
+# in all directions (section size, axial chamber and orifice cells).
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+run:
+  n_procs: 8
+variants:
+  - name: mesh_coarse
+    set: {mesh.chamber_cell_size_mm: 1.5, mesh.piston_cell_size_mm: 1.6,
+          mesh.section.size_factor: 1.2, mesh.section.min_size_mm: 0.225}
+  - name: mesh_medium
+    set: {mesh.chamber_cell_size_mm: 1.0, mesh.piston_cell_size_mm: 1.0,
+          mesh.section.size_factor: 0.8, mesh.section.min_size_mm: 0.15}
+  - name: mesh_fine
+    set: {run.n_procs: 16, mesh.chamber_cell_size_mm: 0.6667, mesh.piston_cell_size_mm: 0.6667,
+          mesh.section.size_factor: 0.5333, mesh.section.min_size_mm: 0.1}

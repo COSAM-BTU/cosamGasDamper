@@ -1,0 +1,11 @@
+# Turbulence-model sensitivity: laminar runs of matrix cases with low and moderate orifice Re.
+case:
+  name: lam
+  name_template: "lam_N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+gas:
+  turbulence: laminar
+run:
+  n_procs: 8
+sweep:
+  geometry.orifice.count: [2]
+  motion.mean_speed_mps: [0.1, 1.0]

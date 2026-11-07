@@ -1,0 +1,25 @@
+# Local refinement of the orifices: N = 2, v = 1 m/s, medium mesh elsewhere. The GMSH curvature size
+# (elements per 2*pi on curved edges) refines the small orifice circles: 6 -> 48, 8 -> 132, 12 -> 224
+# quadrilaterals per orifice cross-section, against 16 on the medium and 48 on the extra-fine mesh.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  chamber_cell_size_mm: 1.0
+  piston_cell_size_mm: 1.0
+  section:
+    size_factor: 0.8
+    min_size_mm: 0.15
+run:
+  n_procs: 8
+variants:
+  - name: orif_C6
+    set: {mesh.section.curvature_elements: 6}
+  - name: orif_C8
+    set: {mesh.section.curvature_elements: 8}
+  - name: orif_C12
+    set: {mesh.section.curvature_elements: 12}
+  - name: orif_C12p
+    set: {mesh.section.curvature_elements: 12, mesh.piston_cell_size_mm: 0.5}

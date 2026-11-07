@@ -1,0 +1,10 @@
+# Quick end-to-end test: 10 orifices, 1 m/s, one compression-rebound cycle.
+case:
+  name: quick_N10_v1
+geometry:
+  orifice:
+    count: 10
+motion:
+  mean_speed_mps: 1.0
+run:
+  n_procs: 8

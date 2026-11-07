@@ -1,0 +1,35 @@
+# Verification and sensitivity studies on the orifice-refined cross-section with axial cells of 1 mm (curvature size
+# 8, as 11_matrix_C8.yaml; superseded by 15_studies_ref.yaml, which reuses some of its cross-sections); each is
+# compared with the matrix case of the same N and speed. Plus one C12 case for N = 10 (orifice resolution at the
+# largest orifice count). Cores are scaled with the mesh size.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  section:
+    curvature_elements: 8
+run:
+  n_procs: 12
+variants:
+  - name: co_0.5                               # time step: maxCo 0.5 against 1 (matrix N2_v1.0)
+    set: {numerics.max_courant: 0.5}
+  - name: seg_K3                               # sub-meshes per stroke: 3 and 6 against 4 (matrix N2_v1.0)
+    set: {motion.meshes_per_stroke: 3}
+  - name: seg_K6
+    set: {motion.meshes_per_stroke: 6}
+  - name: lam_N2_v0.1                          # turbulence model: laminar against kOmegaSST
+    set: {gas.turbulence: laminar, motion.mean_speed_mps: 0.1}
+  - name: lam_N2_v1.0
+    set: {gas.turbulence: laminar}
+  - name: p20_N2_v1.0                          # pre-charge pressure 20 bar against 1 bar
+    set: {gas.initial_pressure_Pa: 2.0e+6}
+  - name: p20_N6_v1.0
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 6, run.n_procs: 16}
+  - name: p20_N10_v1.0
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 10, run.n_procs: 24}
+  - name: sin_N4_v1.0                          # sinusoidal piston motion with the same mean speed
+    set: {motion.profile: sinusoidal, geometry.orifice.count: 4, run.n_procs: 16}
+  - name: orifN10_C12                          # orifice resolution at N = 10: curvature 12 against 8
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 12, run.n_procs: 32}

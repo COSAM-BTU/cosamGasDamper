@@ -1,0 +1,13 @@
+# Time-step study on the medium mesh: maxCo = 0.5 (maxCo = 1 is the matrix case N2_v1).
+case:
+  name: courant
+  name_template: "co_{numerics_max_courant}"
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+run:
+  n_procs: 8
+sweep:
+  numerics.max_courant: [0.5]

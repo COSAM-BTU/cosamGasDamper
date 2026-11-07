@@ -1,0 +1,11 @@
+# Pre-charge pressure: 20 bar, compared with the 1 bar matrix cases.
+case:
+  name: p20
+  name_template: "p20_N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+gas:
+  initial_pressure_Pa: 2.0e+6
+run:
+  n_procs: 8
+sweep:
+  geometry.orifice.count: [2, 6, 10]
+  motion.mean_speed_mps: [1.0]

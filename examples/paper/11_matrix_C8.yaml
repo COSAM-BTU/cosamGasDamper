@@ -1,0 +1,15 @@
+# Orifice count x piston speed matrix on the orifice-refined cross-section (curvature size 8: 132 quadrilaterals per
+# orifice cross-section, medium mesh elsewhere) with the axial cells of the medium mesh (1 mm); its cross-sections
+# are reused by the reference mesh of 14_matrix_ref.yaml, which adds the axial refinement. Speed is the outer key
+# and the orifice count runs downwards so that the longest cases (low speed, many orifices) start first.
+case:
+  name: matrix
+  name_template: "N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+mesh:
+  section:
+    curvature_elements: 8
+run:
+  n_procs: 8
+sweep:
+  motion.mean_speed_mps: [0.025, 0.1, 0.4, 1.0, 2.0, 4.0]
+  geometry.orifice.count: [10, 8, 6, 4, 2]

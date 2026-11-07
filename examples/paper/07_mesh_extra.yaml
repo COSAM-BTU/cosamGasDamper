@@ -1,0 +1,19 @@
+# Mesh study, continued: a fourth level (refinement ratio 1.5 from "fine") and two
+# one-directional refinements of the medium mesh, N = 2, v = 1 m/s.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+run:
+  n_procs: 8
+variants:
+  - name: mesh_xfine
+    set: {run.n_procs: 32, mesh.chamber_cell_size_mm: 0.4444, mesh.piston_cell_size_mm: 0.4444,
+          mesh.section.size_factor: 0.3556, mesh.section.min_size_mm: 0.0667}
+  - name: mesh_sectionFine
+    set: {mesh.chamber_cell_size_mm: 1.0, mesh.piston_cell_size_mm: 1.0,
+          mesh.section.size_factor: 0.5333, mesh.section.min_size_mm: 0.1}
+  - name: mesh_axialFine
+    set: {mesh.chamber_cell_size_mm: 0.6667, mesh.piston_cell_size_mm: 0.6667,
+          mesh.section.size_factor: 0.8, mesh.section.min_size_mm: 0.15}

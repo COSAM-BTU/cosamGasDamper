@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "cosamGasDamper: automated large-stroke CFD of gas-filled piston-cylinder dampers with multiple orifices"
+abstract: >-
+  Configuration-driven OpenFOAM framework for gas springs and gas-filled piston-cylinder dampers. One YAML file
+  and one command produce the parametric geometry, hexahedral sub-meshes for one to ten orifices (SALOME and Gmsh),
+  a segmented multi-mesh compressible moving-mesh simulation of the whole stroke (rhoPimpleFoam), time series,
+  a force and energy summary, and headless ParaView renderings; a sweep runner executes parameter studies under a
+  core budget.
+version: 1.0.0
+date-released: 2026-11-07
+license: GPL-3.0-or-later
+repository-code: "https://github.com/COSAM-BTU/cosamGasDamper"
+keywords:
+  - OpenFOAM
+  - gas spring
+  - gas damper
+  - moving mesh
+  - compressible orifice flow
+  - workflow automation
+authors:
+  - family-names: Aydınbakar
+    given-names: Levent
+    affiliation: Bursa Technical University
+    orcid: "https://orcid.org/0000-0002-8820-9874"
+  - family-names: Gömlekli
+    given-names: Murat
+    affiliation: Bursa Technical University
+    orcid: "https://orcid.org/0009-0003-9423-7315"

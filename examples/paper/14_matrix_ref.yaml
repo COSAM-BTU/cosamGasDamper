@@ -1,0 +1,18 @@
+# Orifice count x piston speed matrix on the reference mesh: the orifice-refined cross-section of 11_matrix_C8.yaml
+# (curvature size 8), reused from the case of the same name there, with axial cells of 0.1 mm inside the piston and
+# at both piston faces, growing by the default factor 1.15 to the chamber cell size. Only the axial resolution
+# differs from 11_matrix_C8.yaml. mesh.section_med is relative to the directory the sweep is started from.
+case:
+  name: matrix
+  name_template: "N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+mesh:
+  section:
+    curvature_elements: 8
+  section_med: "matrixC8/{name}/mesh/section.med"
+  piston_cell_size_mm: 0.1
+  face_cell_size_mm: 0.1
+run:
+  n_procs: 16
+sweep:
+  motion.mean_speed_mps: [0.025, 0.1, 0.4, 1.0, 2.0, 4.0]
+  geometry.orifice.count: [10, 8, 6, 4, 2]

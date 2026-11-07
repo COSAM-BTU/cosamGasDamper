@@ -1,0 +1,20 @@
+# Sensitivity to the number of sub-meshes per stroke, K: N = 2, v = 1 m/s on the medium mesh;
+# the reference K = 4 is mesh_medium of 02_mesh.yaml.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  chamber_cell_size_mm: 1.0
+  piston_cell_size_mm: 1.0
+  section:
+    size_factor: 0.8
+    min_size_mm: 0.15
+run:
+  n_procs: 8
+variants:
+  - name: seg_K3
+    set: {motion.meshes_per_stroke: 3}
+  - name: seg_K6
+    set: {motion.meshes_per_stroke: 6}

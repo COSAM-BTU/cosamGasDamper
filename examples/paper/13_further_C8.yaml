@@ -1,0 +1,41 @@
+# Further verification on the orifice-refined cross-section with axial cells of 1 mm (curvature size 8, as
+# 11_matrix_C8.yaml; its cross-sections are reused by 15_studies_ref.yaml):
+# - time step on the stored cross-section of the matrix case (so that only the Courant number changes),
+#   at 1 and 4 m/s; mesh.section_med is relative to the directory the sweep is started from;
+# - further orifice-refinement levels for N = 2 (C = 10) and N = 10 (C = 6 and 10);
+# - the finest level C = 12 at 20 bar, where the orifice Reynolds number reaches 1e5;
+# - axial cells of 0.1 mm in the orifices and next to the piston faces (growing to 1 mm in the chambers), on the
+#   cross-sections of the matrix cases.
+motion:
+  mean_speed_mps: 1.0
+geometry:
+  orifice:
+    count: 2
+mesh:
+  section:
+    curvature_elements: 8
+run:
+  n_procs: 12
+variants:
+  - name: co05s_N2_v1.0                        # maxCo 0.5 against 1 (matrix N2_v1.0), same cross-section
+    set: {numerics.max_courant: 0.5, mesh.section_med: matrixC8/N2_v1.0/mesh/section.med}
+  - name: co05s_N2_v4.0                        # maxCo 0.5 against 1 (matrix N2_v4.0), same cross-section
+    set: {numerics.max_courant: 0.5, motion.mean_speed_mps: 4.0,
+          mesh.section_med: matrixC8/N2_v4.0/mesh/section.med}
+  - name: orif_C10                             # orifice refinement, N = 2: fourth level between C = 8 and 12
+    set: {mesh.section.curvature_elements: 10, run.n_procs: 16}
+  - name: orifN10_C6                           # orifice refinement, N = 10: C = 6 and 10 (8: matrix, 12: 12_studies_C8)
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 6, run.n_procs: 24}
+  - name: orifN10_C10
+    set: {geometry.orifice.count: 10, mesh.section.curvature_elements: 10, run.n_procs: 32}
+  - name: p20_N2_C12                           # 20 bar on the finest level (C = 8: 12_studies_C8)
+    set: {gas.initial_pressure_Pa: 2.0e+6, mesh.section.curvature_elements: 12, run.n_procs: 16}
+  - name: p20_N10_C12
+    set: {gas.initial_pressure_Pa: 2.0e+6, geometry.orifice.count: 10, mesh.section.curvature_elements: 12,
+          run.n_procs: 32}
+  - name: axN2_v1.0                            # axial refinement at the orifice inlets (matrix N2_v1.0)
+    set: {mesh.piston_cell_size_mm: 0.1, mesh.face_cell_size_mm: 0.1, run.n_procs: 16,
+          mesh.section_med: matrixC8/N2_v1.0/mesh/section.med}
+  - name: axN10_v1.0                           # axial refinement at the orifice inlets (matrix N10_v1.0)
+    set: {geometry.orifice.count: 10, mesh.piston_cell_size_mm: 0.1, mesh.face_cell_size_mm: 0.1,
+          run.n_procs: 24, mesh.section_med: matrixC8/N10_v1.0/mesh/section.med}

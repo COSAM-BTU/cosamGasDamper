@@ -1,0 +1,9 @@
+# Orifice count x piston speed matrix (paper, section "parametric demonstration").
+case:
+  name: matrix
+  name_template: "N{geometry_orifice_count}_v{motion_mean_speed_mps}"
+run:
+  n_procs: 8
+sweep:
+  geometry.orifice.count: [2, 4, 6, 8, 10]
+  motion.mean_speed_mps: [0.025, 0.1, 0.4, 1.0, 2.0, 4.0]
